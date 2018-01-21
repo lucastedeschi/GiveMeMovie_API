@@ -1,5 +1,19 @@
 <html>
     <body>
-        <h1>Lista de usuários</h1>
+        <h1>Users - List</h1>
+        <table>
+            <tr>
+                <td>Id</td>
+                <td>Email</td>
+                <td>Created On</td>
+            </tr>
+            <%for(var i = 0; i < list.length; i++) { %>
+                <tr>
+                    <td><%=list[i].id%></td>
+                    <td><%=list[i].email%></td>
+                    <td><%=list[i].createdon%></td>
+                </tr>
+            <%}%>
+        </table>
     </body>
 </html>

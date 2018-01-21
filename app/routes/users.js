@@ -8,10 +8,10 @@ module.exports = function(app) {
             database: 'GiveMeMovie'
         });
 
-        connection.query('select * from users', function(err, result) { 
-            res.send(result);
+        connection.query('select * from users', function(err, result) {
+            res.render('users/list', {list: result});
         });
-
+ 
         connection.end();
     });
 }

@@ -1,20 +1,11 @@
-var http = require('http');
+var express = require('../config/express')();
+var request = require('supertest')(express);
 
 describe('#UsersRoutes', function() {
     it('#List', function(done){
-        var configurations = {
-            hostname: 'localhost',
-            port: 3000,
-            path: '/users',
-            headers: {
-                'Accept': 'application/json'
-            }
-        }
-        
-        http.get(configurations, function(res){
-            assert.Equal(res.statusCode, 200);
-            assert.Equal(res.headers['content-type'], 'application/json; charset=UTF-8');
-            done();
-        })
+        request.get('/users')
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
     })
 }) 

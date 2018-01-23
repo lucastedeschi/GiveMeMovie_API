@@ -4,9 +4,15 @@ module.exports = function(app) {
         var usersDAO = new app.infra.usersDAO(connection);
 
         usersDAO.list(function(err, result) {
-            res.render('users/list', {list: result});
+            res.format({
+                html: function() {
+                    res.render('users/list', {list: result});
+                },
+                json: function() {
+                    res.json(result);
+                }
+            })
         });
- 
         connection.end();
     });
 

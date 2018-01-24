@@ -1,6 +1,5 @@
 module.exports = function(app) {
-    
-    var listUsers = function(req, res, next){
+    app.get('/users', function(req, res, next){
         var connection = app.infra.connectionFactory();
         var usersDAO = new app.infra.usersDAO(connection);
 
@@ -9,9 +8,6 @@ module.exports = function(app) {
                 return next(err);
             }
             res.format({
-                html: function() {
-                    res.render('users/list', {list: result});
-                },
                 json: function() {
                     res.json(result);
                 }
@@ -19,12 +15,26 @@ module.exports = function(app) {
         });
 
         connection.end();
-    };
+    });
 
-    app.get('/users', listUsers);
+    app.get('/users/:userId', function(req, res, next) { 
+        var userId = req.params.userId;
 
-    app.get('/users/form', function(req, res) {
-        res.render("users/form", {validationErrors: {}, user: {}});
+        var connection = app.infra.connectionFactory();
+        var usersDAO = new app.infra.usersDAO(connection);
+
+        usersDAO.getById(userId, function(err, result) {
+            if(err){
+                return next(err);
+            }
+            res.format({
+                json: function() {
+                    res.json(result);
+                }
+            })
+        });
+
+        connection.end();
     });
 
     app.post('/users', function(req, res, next) { 
@@ -56,7 +66,51 @@ module.exports = function(app) {
             if(err){
                 return next(err);
             }
-            res.redirect('/users');
+            res.format({
+                json: function() {
+                    res.json(result);
+                }
+            })
+        });
+
+        connection.end();
+    });
+
+    app.post('/users/update', function(req, res, next) { 
+        var user = req.body;
+
+        var connection = app.infra.connectionFactory();
+        var usersDAO = new app.infra.usersDAO(connection);
+
+        usersDAO.update(user, function(err, result) {
+            if(err){
+                return next(err);
+            }
+            res.format({
+                json: function() {
+                    res.json(result);
+                }
+            })
+        });
+
+        connection.end();
+    });
+
+    app.get('/users/delete/:userId', function(req, res, next) { 
+        var userId = req.params.userId;
+
+        var connection = app.infra.connectionFactory();
+        var usersDAO = new app.infra.usersDAO(connection);
+
+        usersDAO.delete(userId, function(err, result) {
+            if(err){
+                return next(err);
+            }
+            res.format({
+                json: function() {
+                    res.json(result);
+                }
+            })
         });
 
         connection.end();

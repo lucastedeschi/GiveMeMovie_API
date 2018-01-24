@@ -4,7 +4,7 @@
   "description": "",
   "main": "user.js",
   "scripts": {
-    "test": "SET NODE_ENV=test&&mocha"
+    "test": "mocha"
   },
   "author": "ltedeschi",
   "license": "ISC",

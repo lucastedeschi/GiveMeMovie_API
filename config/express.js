@@ -16,6 +16,7 @@ module.exports = function() {
 
     load('routes', {cwd: 'app'})
         .then('infra')
+        .then('integrations')
         .into(app);
 
     return app;

@@ -1,23 +1,50 @@
+var _ = require("underscore");
+var Q = require('q');
+var async = require('async');
+
 module.exports = function(app){
     app.post('/movies/suggestions', function(req, res, next) {
-        //receber do rubs: diretores, generos, atores
-        var genres = req.body.genres;
-        var actors = req.body.actors;
-        var directors = req.body.directors;
-
+        var request = req.body;
+        console.log(request);
+        
         var theMovieDbClient = new app.integrations.theMovieDbClient();
 
-        theMovieDbClient.getMoviesByGenres(genres, function(err, result) { 
-            res.json(result);
+        // Fluxo para gerar lista de filmes
+        theMovieDbClient.getGenres()
+        .then(function(getGenresRes) {
+            return filterGenresByRequest(getGenresRes, request);
+        }).then(function(filteredGenresIds) {
+            var preferences = {
+                //vote_average_lte: "",
+                //vote_average_gte: "",
+                //vote_count_lte: "",
+                //primary_release_year: "",
+                page: 1,
+                include_video: false,
+                include_adult: false,
+                sort_by: "popularity.desc",
+                with_genres: filteredGenresIds
+            };
+            return theMovieDbClient.getMovies(preferences);
+        }).then(function(movies) {
+            res.json(movies);
         });
-        //buscar filmes q tenham os generos e gerar lista
-        //buscar na lista os q tenham os atores, ou pelo menos um deles
-        //buscar na lista os q sejam daquele diretor
 
-        //sempre ordenando por popularidade
-        
-        //buscar Data de lançamento
-        
-        //buscar Base local 
+        // Funções auxiliares
+        function filterGenresByRequest(allGenres, request) {
+            var deferred = Q.defer();
+            var filteredGenres = [];
+
+            async.eachSeries(request.genres, function(genre, callback) {
+                var genreId = _.find(allGenres.genres, function(element) { 
+                    return element.name === genre}).id;
+                filteredGenres.push(genreId);
+                callback(null);
+            });
+
+            deferred.resolve(filteredGenres);
+            return deferred.promise;
+        }
+
     });
 }

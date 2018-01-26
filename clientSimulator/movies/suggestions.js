@@ -19,21 +19,7 @@ var client = http.request(configurations, function(res){
 })
 
 var request = {
-    genres: [{
-        name: 'Action'
-    }, {
-        name: 'Comedy'
-    }, {
-        name: 'Horror'
-    }],
-    actors: [{
-        name: 'Andree Maranda'
-    } , {
-        name: 'Mitch Cohen'
-    }],
-    directors: [{
-        name: 'Michael Herz'
-    }]
+    genres: ['Comedy', 'Action']
 }
 
 console.log(request);

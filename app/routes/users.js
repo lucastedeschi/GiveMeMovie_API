@@ -8,9 +8,9 @@ module.exports = function(app) {
         User.find({}, function(err, users) {
             if (err) {
                 res.status(400).send(err);
+            } else {
+                res.status(200).json(users);
             }
-          
-            res.json(users);
         });
     });
 
@@ -21,9 +21,9 @@ module.exports = function(app) {
         User.find({email: reqEmail}, function(err, users) {
             if (err) {
                 res.status(400).send(err);
+            } else {
+                res.status(200).json(users);
             }
-          
-            res.json(users);
         });
     });
 
@@ -36,9 +36,10 @@ module.exports = function(app) {
             sex: req.body.sex,
             email: req.body.email,
             password: req.body.password,
-            pictureUrl: res.body.pictureUrl
+            pictureUrl: req.body.pictureUrl
         });
                
+        console.log(req.body);
 
         newUser.save(function(err) {
             if (err) {
@@ -56,8 +57,8 @@ module.exports = function(app) {
             name: req.body.name,
             birth: req.body.birth,
             sex: req.body.sex,
-            pictureUrl: res.body.pictureUrl,
-            updatedOn: Date.now
+            pictureUrl: req.body.pictureUrl,
+            updatedOn: Date.now()
         }, function(err, user) {
             if (err) {
                 res.status(400).send(err);
@@ -76,9 +77,9 @@ module.exports = function(app) {
         }, function(err, user) {
             if (err) {
                 res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
             }
-        
-            res.status(200).json(user);
         });
     });
 
@@ -86,11 +87,11 @@ module.exports = function(app) {
         app.infra.connectionFactory();  
            
         User.findOneAndRemove({ email: req.body.email, password: req.body.password }, function(err) {
-            if (err) throw err;
-          
-            res.status(200);
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
         });
     });
-
-
 }

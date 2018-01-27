@@ -1,118 +1,96 @@
+var mongoose = require('mongoose');
+var User = require('../infra/schemas/user')();
+
 module.exports = function(app) {
-    app.get('/users', function(req, res, next){
-        var connection = app.infra.connectionFactory();
-        var usersDAO = new app.infra.usersDAO(connection);
+    app.get('/users', function(req, res){
+        app.infra.connectionFactory();         
 
-        usersDAO.list(function(err, result) {
-            if(err) {
-                return next(err);
+        User.find({}, function(err, users) {
+            if (err) {
+                res.status(400).send(err);
             }
-            res.format({
-                json: function() {
-                    res.json(result);
-                }
-            })
+          
+            res.json(users);
         });
-
-        connection.end();
     });
 
-    app.get('/users/:userId', function(req, res, next) { 
-        var userId = req.params.userId;
+    app.get('/users/:email', function(req, res) { 
+        var reqEmail = req.params.email;
+        app.infra.connectionFactory();         
 
-        var connection = app.infra.connectionFactory();
-        var usersDAO = new app.infra.usersDAO(connection);
-
-        usersDAO.getById(userId, function(err, result) {
-            if(err){
-                return next(err);
+        User.find({email: reqEmail}, function(err, users) {
+            if (err) {
+                res.status(400).send(err);
             }
-            res.format({
-                json: function() {
-                    res.json(result);
-                }
-            })
+          
+            res.json(users);
         });
-
-        connection.end();
     });
 
-    app.post('/users', function(req, res, next) { 
-        var user = req.body;
+    app.post('/users', function(req, res) { 
+        app.infra.connectionFactory();  
+
+        var newUser = new User({
+            name: req.body.name,
+            birth: req.body.birth,
+            sex: req.body.sex,
+            email: req.body.email,
+            password: req.body.password,
+            pictureUrl: res.body.pictureUrl
+        });
+               
+
+        newUser.save(function(err) {
+            if (err) {
+                res.status(400).send(err);
+            } else {          
+                res.status(201).send();
+            }
+        });
+    });
+
+    app.post('/users/update', function(req, res) { 
+        app.infra.connectionFactory();  
+           
+        User.findOneAndUpdate({ email: req.body.email }, { 
+            name: req.body.name,
+            birth: req.body.birth,
+            sex: req.body.sex,
+            pictureUrl: res.body.pictureUrl,
+            updatedOn: Date.now
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        });
+    });
+
+    app.post('/users/updatePassword', function(req, res) { 
+        app.infra.connectionFactory();  
+           
+        User.findOneAndUpdate({ email: req.body.email }, { 
+            password: req.body.password,
+            updatedOn: Date.now
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            }
         
-        //req.assert('Email', 'Email is required').notEmpty();
-        //req.assert('Password', 'Password is required').notEmpty();
-
-        var errors = req.validationErrors();
-        if(errors){
-            res.format({
-                html: function() {
-                    res.status(400).render('users/form', {validationErrors: errors, user: user});
-                },
-                json: function() {
-                    res.status(400).json(errors);
-                }
-            });
-
-            return;
-        }
-
-        user.createdon = new Date();
-
-        var connection = app.infra.connectionFactory();
-        var usersDAO = new app.infra.usersDAO(connection);
-
-        usersDAO.insert(user, function(err, result) {
-            if(err){
-                return next(err);
-            }
-            res.format({
-                json: function() {
-                    res.json(result);
-                }
-            })
+            res.status(200).json(user);
         });
-
-        connection.end();
     });
 
-    app.post('/users/update', function(req, res, next) { 
-        var user = req.body;
-
-        var connection = app.infra.connectionFactory();
-        var usersDAO = new app.infra.usersDAO(connection);
-
-        usersDAO.update(user, function(err, result) {
-            if(err){
-                return next(err);
-            }
-            res.format({
-                json: function() {
-                    res.json(result);
-                }
-            })
+    app.post('/users/delete', function(req, res) { 
+        app.infra.connectionFactory();  
+           
+        User.findOneAndRemove({ email: req.body.email, password: req.body.password }, function(err) {
+            if (err) throw err;
+          
+            res.status(200);
         });
-
-        connection.end();
     });
 
-    app.get('/users/delete/:userId', function(req, res, next) { 
-        var userId = req.params.userId;
 
-        var connection = app.infra.connectionFactory();
-        var usersDAO = new app.infra.usersDAO(connection);
-
-        usersDAO.delete(userId, function(err, result) {
-            if(err){
-                return next(err);
-            }
-            res.format({
-                json: function() {
-                    res.json(result);
-                }
-            })
-        });
-
-        connection.end();
-    });
 }

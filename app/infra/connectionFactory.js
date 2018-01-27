@@ -1,27 +1,17 @@
-var mysql = require('mysql');
+var mongoose = require('mongoose');
 
-function createDbConnection() {
-    
-    if(!process.env.NODE_ENV){
-        return mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: '123456',
-            database: 'GiveMeMovie_Test'
-        });
-    }
+function connect() {
+    var db = mongoose.connection;
 
-    if(process.env.NODE_ENV == 'test'){
-        console.log('Starting Test Database');
-        return mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: '123456',
-            database: 'GiveMeMovie_Test'
-        });
-    }
+    db.on('error', console.error);
+
+    db.once('open', function() {
+        console.log('Connected: MongoDB')
+    });
+
+    mongoose.connect('mongodb://teamDev:123456@ds117128.mlab.com:17128/givememovie_api');
 }
         
 module.exports = function() {
-    return createDbConnection;
+    return connect;
 }

@@ -1,4 +1,4 @@
-# GiveMeMovie_API
+<h1>GiveMeMovie_API</h1>
 <p>
 API responsável pelo gerenciamento de usuário e fornecimento de sugestões das aplicações Give Me Movie. Desenvolvida em Node.Js se comunicando com base de dados em Mongo e com a API do The Movie DB.
 
@@ -9,8 +9,8 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
 </p>
 
 <br />
-## Exemplos de requests
-### Usuário
+<h2>Exemplos de requests</h2>
+<h3>Usuário</h3>
 
 <ul>
 <li>Criar:</li>

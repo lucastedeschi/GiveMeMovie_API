@@ -13,9 +13,9 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
 ### Usuário
 
 <ul>
-<li>Criação:</li>
+<li>Criar:</li>
 <p>
-/users/
+POST: /users/
 </p>
 <p>
 <code>
@@ -30,10 +30,40 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
  </code>
  </p>
 <br />
+  
+<li>Atualizar:</li>
+<p>
+POST: /users/update
+</p>
+<p>
+<code>
+ {
+    "name": "User 01",
+    "email": "01@user.com",
+    "sex": "Masculino",
+    "birth": "2000-01-20",
+    "password": "123456",
+    "pictureUrl": "http://example.com/01.png"
+ }
+ </code>
+ </p>
+<br />
+  
+<li>Listar todos:</li>
+<p>
+GET: /users/
+</p>
+<br />
+
+<li>Listar por email:</li>
+<p>
+GET: /users/:email
+</p>
+<br />
 
 <li>Adicionar filme a lista de assistidos do usuário:</li>
 <p>
-/users/movies/pushWatched
+POST: /users/movies/pushWatched
 </p>
 <p>
 <code>
@@ -50,7 +80,7 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
 
 <li>Adicionar filme a lista de assistir depois do usuário:</li>
 <p>
-/users/movies/pushWatchLater
+POST: /users/movies/pushWatchLater
 </p>
 <p>
 <code>
@@ -66,7 +96,7 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
 
 <li>Adicionar filme a lista de não exibir novamente do usuário:</li>
 <p>
-/users/movies/pushBlacklist
+POST: /users/movies/pushBlacklist
 </p>
 <p>
 <code>

@@ -75,7 +75,6 @@ theMovieDbClient.prototype.getMovies = function(preferences) {
     return deferred.promise;
 }
 
-
 module.exports = function() {
     return theMovieDbClient;
 }

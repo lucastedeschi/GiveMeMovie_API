@@ -38,8 +38,6 @@ module.exports = function(app) {
             password: req.body.password,
             pictureUrl: req.body.pictureUrl
         });
-               
-        console.log(req.body);
 
         newUser.save(function(err) {
             if (err) {
@@ -81,6 +79,104 @@ module.exports = function(app) {
                 res.status(200).json(user);
             }
         });
+    });
+
+    app.post('/users/movies/pushWatched', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email }, {
+           $push: {'movies.watched': req.body.movie }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/setWatched', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email, 'movies.watched': {'id': req.body.movie.id } }, {
+           $set: {'movies.watched': {'liked': req.body.movie.liked } }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/pullWatched', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email}, {
+           $pull: {'movies.watched': {'id': req.body.movie.id} }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/pushWatchLater', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email }, {
+           $push: {'movies.watchLater': req.body.movieId }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/pullWatchLater', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email}, {
+           $pull: {'movies.watchLater': {'id': req.body.movie.id} }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/pushBlacklist', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({email: req.body.email }, {
+           $push: {moviesBlacklist: req.body.movieId }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
+    });
+
+    app.post('/users/movies/pullBlacklist', function(req, res) {
+        app.infra.connectionFactory();
+
+        User.update({'email': req.body.email}, {
+           $pull: {'movies.blacklist': {'id': req.body.movie.id} }
+        }, function(err, user) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                res.status(200).json(user);
+            }
+        })
     });
 
     app.post('/users/delete', function(req, res) { 

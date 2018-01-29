@@ -99,7 +99,7 @@ module.exports = function(app) {
         app.infra.connectionFactory();
 
         User.update({'email': req.body.email, 'movies.watched': {'id': req.body.movie.id } }, {
-           $set: {'movies.watched': {'liked': req.body.movie.liked } }
+           $set: {'movies.watched': {'rate': req.body.movie.rate } }
         }, function(err, user) {
             if (err) {
                 res.status(400).send(err);
@@ -127,7 +127,7 @@ module.exports = function(app) {
         app.infra.connectionFactory();
 
         User.update({'email': req.body.email }, {
-           $push: {'movies.watchLater': req.body.movieId }
+           $push: {'movies.watchLater': req.body.movie }
         }, function(err, user) {
             if (err) {
                 res.status(400).send(err);
@@ -155,7 +155,7 @@ module.exports = function(app) {
         app.infra.connectionFactory();
 
         User.update({email: req.body.email }, {
-           $push: {moviesBlacklist: req.body.movieId }
+           $push: {"movies.blacklist": req.body.movie }
         }, function(err, user) {
             if (err) {
                 res.status(400).send(err);

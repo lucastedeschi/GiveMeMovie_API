@@ -1,6 +1,8 @@
 var _ = require("underscore");
 var Q = require('q');
 var async = require('async');
+var mongoose = require('mongoose');
+var User = require('../infra/schemas/user')();
 
 module.exports = function(app){
     app.post('/movies/suggestions', function(req, res, next) {
@@ -27,7 +29,9 @@ module.exports = function(app){
             };
             return theMovieDbClient.getMovies(preferences);
         }).then(function(movies) {
-            res.json(movies);
+            return filterMoviesByUserLists(movies, req.body.userEmail);
+        }).then(function(moviesFiltered) {
+            res.json(moviesFiltered);
         });
 
         // Funções auxiliares
@@ -46,5 +50,65 @@ module.exports = function(app){
             return deferred.promise;
         }
 
+        function filterMoviesByUserLists(movies, userEmail, request) {
+            var deferred = Q.defer();
+            app.infra.connectionFactory();
+            
+            User.find({email: userEmail}, function(err, user) {
+                if (err) {
+                    res.status(400).send(err);
+                } else {
+                    var watched = user[0].movies.watched;
+                    var watchLater = user[0].movies.watchLater;
+                    var blacklist = user[0].movies.blacklist;
+
+                    var moviesToRemove = [];
+
+                    async.eachSeries(movies.results, function(movie, callback) {
+                        existsMovieIdInList(movie.id, watched)
+                        .then(function(existsWatched) {
+                            if(existsWatched) {
+                                moviesToRemove.push(movie.id);
+                                console.log(movie.id);
+                                callback();
+                            }
+                            return existsMovieIdInList(movie.id, watchLater)
+                        }).then(function(existsWatchLater) {
+                            if(existsWatchLater) {
+                                moviesToRemove.push(movie.id);
+                                console.log(movie.id);
+                                callback();
+                            }
+                            return existsMovieIdInList(movie.id, blacklist)
+                        }).then(function(existsBlacklist) {
+                            if(existsBlacklist) {
+                                moviesToRemove.push(movie.id);
+                                console.log(movie.id);
+                                callback();
+                            }
+                        });
+                        callback();
+                    });
+                }
+            });
+
+            deferred.resolve(movies);
+            return deferred.promise;
+        };
+
+        function existsMovieIdInList(movieId, list) {
+            var deferred = Q.defer();
+
+            async.eachSeries(list, function(movie, callback) {
+                if(movie.id == movieId) {
+                    deferred.resolve(true);
+                    return deferred.promise;
+                }
+                callback(null);
+            });
+
+            deferred.resolve(false);
+            return deferred.promise;
+        }
     });
 }

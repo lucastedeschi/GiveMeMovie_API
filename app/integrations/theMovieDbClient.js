@@ -54,9 +54,7 @@ theMovieDbClient.prototype.getMovies = function(preferences) {
         "&language=pt-BR&api_key=" + api_key,
         "headers": {}
     };
-
-    console.log(options);
-      
+          
     var req = http.request(options, function (res) {
         var chunks = [];
         

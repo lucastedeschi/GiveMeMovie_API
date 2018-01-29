@@ -10,7 +10,7 @@ var userSchema = new mongoose.Schema({
     createdOn: { type: Date, default: Date.now },
     updatedOn: Date,
     movies: {
-        watched: [{ id: Number, liked: Boolean }],
+        watched: [{ id: Number, rate: Number }],
         watchLater: [{id: Number}],
         blacklist: [{id: Number}],
     }

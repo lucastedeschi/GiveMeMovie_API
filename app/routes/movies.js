@@ -29,9 +29,7 @@ module.exports = function(app){
             };
             return theMovieDbClient.getMovies(preferences);
         }).then(function(movies) {
-            return filterMoviesByUserLists(movies, req.body.userEmail);
-        }).then(function(moviesFiltered) {
-            res.json(moviesFiltered);
+            res.json(movies);
         });
 
         // Funções auxiliares

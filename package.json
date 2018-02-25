@@ -4,7 +4,8 @@
   "description": "",
   "main": "user.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node config/express.js"
   },
   "author": "ltedeschi",
   "license": "ISC",

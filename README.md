@@ -107,6 +107,17 @@ POST: /users/movies/pushBlacklist
     		"id": 8844
     }
  }
+    </code>
+ <li>Validar login:</li>
+<p>
+POST: /users/validate
+</p>
+<p>
+<code>
+ {
+    "email": "01@user.com",
+    "password": "123456"
+ }
   </code>
  </p>
  <br />

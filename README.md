@@ -5,6 +5,7 @@ API responsável pelo gerenciamento de usuário e fornecimento de sugestões das
 <ul>
   <li>Base de dados: mongodb://dbuser:dbpassword@ds117128.mlab.com:17128/givememovie_api</li>
   <li>The Movie DB API: <a>https://developers.themoviedb.org/3/discover/</a></li>
+  <li>Heroku: <a>https://shielded-lowlands-27093.herokuapp.com/<a/></li>
 </ul>
 </p>
 

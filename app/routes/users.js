@@ -72,7 +72,7 @@ module.exports = function(app) {
         User.findOneAndUpdate({ email: req.body.email }, { 
             password: req.body.password,
             updatedOn: Date.now
-        }, function(err, user) {
+        }, '+password', function(err, user) {
             if (err) {
                 res.status(400).send(err);
             } else {
@@ -182,11 +182,29 @@ module.exports = function(app) {
     app.post('/users/delete', function(req, res) { 
         app.infra.connectionFactory();  
            
-        User.findOneAndRemove({ email: req.body.email, password: req.body.password }, function(err) {
+        User.findOneAndRemove({ email: req.body.email, password: req.body.password }, '+password', function(err) {
             if (err) {
                 res.status(400).send(err);
             } else {
                 res.status(200).json(user);
+            }
+        });
+    });
+
+    app.post('/users/validate', function(req, res) { 
+        var reqEmail = req.body.email;
+        var reqPassword = req.body.password;
+        app.infra.connectionFactory();         
+
+        User.find({email: reqEmail}, '+password', function(err, users) {
+            if (err) {
+                res.status(400).send(err);
+            } else {
+                console.log(users);
+                if(users[0].password == reqPassword)         
+                    res.status(200).json({validated: true});
+                else
+                    res.status(200).json({validated: false});
             }
         });
     });

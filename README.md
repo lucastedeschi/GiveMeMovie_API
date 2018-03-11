@@ -32,6 +32,21 @@ POST: /users/
  </p>
 <br />
   
+
+ <li>Validar login:</li>
+<p>
+POST: /users/validate
+</p>
+<p>
+<code>
+ {
+    "email": "01@user.com",
+    "password": "123456"
+ }
+  </code>
+  </p>
+  <br />
+ 
 <li>Atualizar:</li>
 <p>
 POST: /users/update
@@ -108,17 +123,6 @@ POST: /users/movies/pushBlacklist
     }
  }
     </code>
- <li>Validar login:</li>
-<p>
-POST: /users/validate
-</p>
-<p>
-<code>
- {
-    "email": "01@user.com",
-    "password": "123456"
- }
-  </code>
  </p>
  <br />
  
